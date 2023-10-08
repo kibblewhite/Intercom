@@ -31,8 +31,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -configuration Release
-    – name: Update-Base-Tag
-      run: sed -i 's/<base href="\/" \/>/<base href="\/${{ env.REPO_NAME }}\/" \/>/g' $GITHUB_WORKSPACE/$PUBLISH_FOLDER/index.html
     – name: Deploy
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: peaceiris/actions-gh-pages@v3.9.3
