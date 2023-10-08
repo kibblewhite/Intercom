@@ -27,6 +27,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c Release -v detailed
+      run: dotnet publish -c Release -v normal
     - name: Amend-Base-Tag
-      run: sed -i 's/<base href="\/" \/>/<base href="\/Intercom\/" \/>/g' /home/runner/work/Intercom/Intercom/bin/Release/net7.0/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Intercom\/" \/>/g' /home/runner/work/Intercom/Intercom/bin/Release/net7.0/publish/wwwroot/index.html
