@@ -1,7 +1,26 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Web;
 
 namespace Intercom.Pages;
+
+public static class HttpExtensions
+{
+    public static Uri AddQuery(this Uri uri, string name, string value)
+    {
+        System.Collections.Specialized.NameValueCollection httpValueCollection = HttpUtility.ParseQueryString(uri.Query);
+
+        httpValueCollection.Remove(name);
+        httpValueCollection.Add(name, value);
+
+        UriBuilder ub = new(uri)
+        {
+            Query = httpValueCollection.ToString()
+        };
+
+        return ub.Uri;
+    }
+}
 
 public partial class Index
 {
@@ -11,6 +30,10 @@ public partial class Index
         string serverUrl = "https://intercom.byteloch.com/";
         int duration = 4200; // Set the duration to 1800
         int gpio = 0;       // Set the gpio value to 0
+
+        Uri url = new Uri(serverUrl)
+            .AddQuery(nameof(duration), duration.ToString())
+            .AddQuery(nameof(gpio), gpio.ToString());
 
         // Create an HttpClient with the public key
         HttpClientHandler handler = new()
@@ -27,13 +50,10 @@ public partial class Index
 
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", basic_authentication_string);
         httpClient.DefaultRequestHeaders.Referrer = new Uri("https://kibblewhite.github.io/Intercom/");
-        httpClient.DefaultRequestHeaders.Add("Origin", "https://kibblewhite.github.io/Intercom/");
-
-        // Append the duration and gpio parameters to the URL
-        string urlWithParameters = $"{serverUrl}?duration={duration}&gpio={gpio}";
+        httpClient.DefaultRequestHeaders.Add("Origin", "https://kibblewhite.github.io");
 
         // Send a request to the server
-        HttpResponseMessage response = await httpClient.GetAsync(urlWithParameters);
+        HttpResponseMessage response = await httpClient.GetAsync(url);
 
         if (response.IsSuccessStatusCode)
         {
