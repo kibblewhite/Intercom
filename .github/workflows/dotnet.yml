@@ -32,11 +32,8 @@ jobs:
     - name: Publish
       run: dotnet publish -configuration Release
     – name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+      uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-          github_token: ${{ secrets.PUBLISH_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: /${{ env.PUBLISH_FOLDER }}
-          allow_empty_commit: false
-          keep_files: false
-          force_orphan: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: release/wwwroot
