@@ -34,6 +34,12 @@ jobs:
       run: sed -i 's/<base href="\/" \/>/<base href="\/Intercom\/" \/>/g' $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot/index.html
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
       with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-           publish_dir: $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./public
+        folder: $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot
+        allow_empty_commit: false
+        keep_files: false
+        force_orphan: true
