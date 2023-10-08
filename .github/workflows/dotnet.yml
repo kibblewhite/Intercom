@@ -32,7 +32,7 @@ jobs:
     - name: Publish
       run: dotnet publish -configuration Release
     – name: Deploy
-      uses: peaceiris/actions-gh-pages@v3.9.3
+      uses: peaceiris/actions-gh-pages@v3
       with:
           github_token: ${{ secrets.PUBLISH_TOKEN }}
           publish_branch: gh-pages
