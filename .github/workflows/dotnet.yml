@@ -28,8 +28,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish --configuration Release --verbosity minimal
-    - name: GitHub-Workspace-Path
-      run: echo $GITHUB_WORKSPACE
     - name: Amend-Base-Tag
       run: sed -i 's/<base href="\/" \/>/<base href="\/Intercom\/" \/>/g' $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot/index.html
     - name: Deploy
@@ -38,8 +36,9 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: ./public
-        folder: $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot
+        publish_dir: $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot
+        destination_dir: ./public
         allow_empty_commit: false
         keep_files: false
         force_orphan: true
+        enable_jekyll: false
