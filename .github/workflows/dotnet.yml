@@ -34,9 +34,11 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        user_name: kibblewhite
+        user_email: kibblewhite@live.com
         publish_branch: gh-pages
-        publish_dir: $GITHUB_WORKSPACE/bin/Release/net7.0/publish/wwwroot
+        publish_dir: bin/Release/net7.0/publish/wwwroot
         destination_dir: ./public
         allow_empty_commit: false
         keep_files: false
