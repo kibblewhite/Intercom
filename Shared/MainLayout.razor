@@ -1,13 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider @ref="@_mud_theme_provider" @bind-IsDarkMode="@_is_dark_mode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
 
     <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">Heylo, Intercom!</MudText>
+        <MudLink Class="ml-3" Href="" Style="text-decoration: none;">
+            <MudText Class="text-white">Heylo, Intercom!</MudText>
+        </MudLink>
         <MudSpacer />
 
         <AuthorizeView>
@@ -37,3 +39,4 @@
     </MudMainContent>
 
 </MudLayout>
+
