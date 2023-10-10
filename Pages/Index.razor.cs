@@ -23,25 +23,28 @@ public static class HttpExtensions
 
 public partial class Index
 {
-    private static async Task SendRequestAsync()
-    {
-        // Replace with your HTTPS server URL and the path to the public key file
-        string serverUrl = "https://intercom.byteloch.com/";
-        int duration = 4200; // Set the duration to 1800
-        int gpio = 0;       // Set the gpio value to 0
 
-        Uri url = new Uri(serverUrl)
-            .AddQuery(nameof(duration), duration.ToString())
-            .AddQuery(nameof(gpio), gpio.ToString());
+    private const int _default_duration_ms = 800;
+    private const string _server_url = "https://intercom.byteloch.com/";
+
+    protected bool _processing = false;
+    protected int _gpio = 0;
+    protected int _duration_ms = _default_duration_ms;
+
+    protected async Task DurationChangedRequest(int duration_ms)
+        => await Task.FromResult(_duration_ms = duration_ms);
+
+    private async Task ProcessDoorToggleRequest()
+    {
+
+        _processing = true;
+
+        Uri url = new Uri(_server_url)
+            .AddQuery("duration", _duration_ms.ToString())
+            .AddQuery("gpio", _gpio.ToString());
 
         // Create an HttpClient with the public key
-        HttpClientHandler handler = new()
-        {
-            // ClientCertificateOptions = ClientCertificateOption.Manual
-            // ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            // ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
-        };
-
+        HttpClientHandler handler = new();
         using HttpClient httpClient = new(handler);
 
         // autnetication, duh...
@@ -57,11 +60,13 @@ public partial class Index
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("Request was successful.");
-            // Process the response here
         }
         else
         {
             Console.WriteLine($"Request failed with status code {response.StatusCode}.");
         }
+
+        _processing = false;
+
     }
 }

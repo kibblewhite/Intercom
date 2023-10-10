@@ -5,11 +5,13 @@
                 <NotAuthorized>
                     @if (context.User.Identity?.IsAuthenticated != true)
                     {
-                        <RedirectToLogin />
+                        <MudAlert Severity="Severity.Info">
+                            <RedirectToLogin />
+                        </MudAlert>
                     }
                     else
                     {
-                        <p role="alert">You are not authorized to access this resource.</p>
+                        <MudAlert Severity="Severity.Warning">You are not authorized to access this resource.</MudAlert>
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>
@@ -18,7 +20,7 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <MudAlert Severity="Severity.Warning">Sorry, there's nothing at this address.</MudAlert>
             </LayoutView>
         </NotFound>
     </Router>
