@@ -1,31 +1,16 @@
 using System.Text;
-using System.Web;
+using Intercom.Utilities;
 
 namespace Intercom.Pages;
-
-public static class HttpExtensions
-{
-    public static Uri AddQuery(this Uri uri, string name, string value)
-    {
-        System.Collections.Specialized.NameValueCollection httpValueCollection = HttpUtility.ParseQueryString(uri.Query);
-
-        httpValueCollection.Remove(name);
-        httpValueCollection.Add(name, value);
-
-        UriBuilder ub = new(uri)
-        {
-            Query = httpValueCollection.ToString()
-        };
-
-        return ub.Uri;
-    }
-}
 
 public partial class Index
 {
 
     private const int _default_duration_ms = 800;
     private const string _server_url = "https://intercom.byteloch.com/";
+    private const string _referrer_url = "https://kibblewhite.github.io/Intercom/";
+    private const string _origin_url = "https://kibblewhite.github.io";
+    private const string _basic_authentication_credentials = "admin:esp8266";
 
     protected bool _processing = false;
     protected int _gpio = 0;
@@ -48,11 +33,11 @@ public partial class Index
         using HttpClient httpClient = new(handler);
 
         // autnetication, duh...
-        string basic_authentication_string = Convert.ToBase64String(Encoding.UTF8.GetBytes("admin:esp8266"));
+        string basic_authentication_string = Convert.ToBase64String(Encoding.UTF8.GetBytes(_basic_authentication_credentials));
 
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", basic_authentication_string);
-        httpClient.DefaultRequestHeaders.Referrer = new Uri("https://kibblewhite.github.io/Intercom/");
-        httpClient.DefaultRequestHeaders.Add("Origin", "https://kibblewhite.github.io");
+        httpClient.DefaultRequestHeaders.Referrer = new Uri(_referrer_url);
+        httpClient.DefaultRequestHeaders.Add("Origin", _origin_url);
 
         // Send a request to the server
         HttpResponseMessage response = await httpClient.GetAsync(url);
