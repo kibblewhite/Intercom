@@ -50,6 +50,7 @@ public partial class Index
             // Send a request to the server
             HttpResponseMessage response = await httpClient.GetAsync(url);
 
+            await Task.Delay(_duration_ms);
             if (response.IsSuccessStatusCode)
             {
                 Snackbar.Add("Request was successful.", Severity.Success);
@@ -58,8 +59,6 @@ public partial class Index
             {
                 Snackbar.Add($"Request failed with status code: {response.StatusCode}", Severity.Error);
             }
-
-            await Task.Delay(_duration_ms);
         }
         catch (Exception ex)
         {
