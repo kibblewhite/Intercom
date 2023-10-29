@@ -19,5 +19,8 @@ public partial class Authentication
     {
         AuthenticationState authentication_state = await _authentication_state_provider.GetAuthenticationStateAsync();
         AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
+
+        Console.WriteLine(authentication_state.ToString());
+        Console.WriteLine(access_token_result.ToString());
     }
 }
