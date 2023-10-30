@@ -1,7 +1,10 @@
 using Intercom.Utilities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
 using System.Text;
+using System.Text.Json;
 
 namespace Intercom.Pages;
 
@@ -10,6 +13,12 @@ public partial class Index
 
     [Inject]
     public required ISnackbar Snackbar { get; init; }
+
+    [Inject]
+    public required AuthenticationStateProvider _authentication_state_provider { get; set; }
+
+    [Inject]
+    public required IAccessTokenProvider _token_provider { get; set; }
 
     private const int _default_duration_ms = 800;
     private const string _server_url = "https://intercom.byteloch.com/";
@@ -20,6 +29,24 @@ public partial class Index
     protected bool _processing = false;
     protected int _gpio = 0;
     protected int _duration_ms = _default_duration_ms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authentication_state = await _authentication_state_provider.GetAuthenticationStateAsync();
+        AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
+
+        if (authentication_state is null || access_token_result is null)
+        {
+            Console.WriteLine($"Null Check / authentication_state: {authentication_state is null} | access_token_result: {access_token_result is null}");
+            return;
+        }
+
+        string authentication_state_json = JsonSerializer.Serialize(authentication_state);
+        Console.WriteLine(authentication_state_json);
+
+        string access_token_result_json = JsonSerializer.Serialize(access_token_result);
+        Console.WriteLine(access_token_result_json);
+    }
 
     protected async Task DurationChangedRequest(int duration_ms)
         => await Task.FromResult(_duration_ms = duration_ms);
