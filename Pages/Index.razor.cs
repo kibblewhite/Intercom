@@ -3,23 +3,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
 namespace Intercom.Pages;
-
-public sealed class AuthenticationStateDto
-{
-    /// <inheritdoc cref="ClaimsPrincipal.Claims" />
-    public required IEnumerable<Claim> Claims { get; init; }
-
-    /// <inheritdoc cref="ClaimsPrincipal.Identities" />
-    public required IEnumerable<ClaimsIdentity> Identities { get; init; }
-
-    /// <inheritdoc cref="ClaimsPrincipal.Identity" />
-    public required System.Security.Principal.IIdentity? Identity { get; init; }
-}
 
 public partial class Index
 {
@@ -45,14 +32,8 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
+        // AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
         AuthenticationState authentication_state = await _authentication_state_provider.GetAuthenticationStateAsync();
-        AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
-
-        if (authentication_state is null || access_token_result is null)
-        {
-            Console.WriteLine($"Null Check / authentication_state: {authentication_state is null} | access_token_result: {access_token_result is null}");
-            return;
-        }
 
         AuthenticationStateDto authentication_state_dto = new()
         {
@@ -60,13 +41,9 @@ public partial class Index
             Identities = authentication_state.User.Identities,
             Identity = authentication_state.User.Identity
         };
-        
-
-        string authentication_state_json = JsonSerializer.Serialize(authentication_state_dto);
+ 
+        string authentication_state_json = JsonSerializer.Serialize(authentication_state_dto, new JsonSerializerOptions { WriteIndented = true });
         Console.WriteLine(authentication_state_json);
-
-        string access_token_result_json = JsonSerializer.Serialize(access_token_result);
-        Console.WriteLine(access_token_result_json);
     }
 
     protected async Task DurationChangedRequest(int duration_ms)
