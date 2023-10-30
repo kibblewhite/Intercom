@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor;
 using System.Text;
-using System.Text.Json;
 
 namespace Intercom.Pages;
 
@@ -32,18 +31,8 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
-        // AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
+        AccessTokenResult access_token_result = await _token_provider.RequestAccessToken();
         AuthenticationState authentication_state = await _authentication_state_provider.GetAuthenticationStateAsync();
-
-        AuthenticationStateDto authentication_state_dto = new()
-        {
-            Claims = authentication_state.User.Claims,
-            Identities = authentication_state.User.Identities,
-            Identity = authentication_state.User.Identity
-        };
- 
-        string authentication_state_json = JsonSerializer.Serialize(authentication_state_dto, new JsonSerializerOptions { WriteIndented = true });
-        Console.WriteLine(authentication_state_json);
     }
 
     protected async Task DurationChangedRequest(int duration_ms)
